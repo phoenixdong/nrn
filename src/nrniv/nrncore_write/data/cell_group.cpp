@@ -95,14 +95,14 @@ CellGroup* CellGroup::mk_cellgroups(CellGroup* cgs) {
                         // `long` precision, not `int` precision. This lets us
                         // check for overflow below.
                         agid = -(type +
-                                 1000 * static_cast<long>(nrncore_art2index(pnt->prop->param)));
+                                 100 * static_cast<long>(nrncore_art2index(pnt->prop->param)));// dong
                     } else { // POINT_PROCESS with net_event
                         int sz = nrn_prop_param_size_[type];
                         double *d1 = ml->data[0];
                         double *d2 = pnt->prop->param;
                         assert(d2 >= d1 && d2 < (d1 + (sz * ml->nodecount)));
                         long ix{(d2 - d1) / sz};
-                        agid = -(type + 1000 * ix);
+                        agid = -(type + 100 * ix);//dong
                     }
                     if (ps) {
                         if (ps->output_index_ >= 0) { // has gid
@@ -121,7 +121,7 @@ CellGroup* CellGroup::mk_cellgroups(CellGroup* cgs) {
                     // Point_process.
                     if (agid < std::numeric_limits<int>::min() || agid >= -1) {
                         std::ostringstream oss;
-                        oss << "maximum of ~" << std::numeric_limits<int>::max() / 1000
+                        oss << "maximum of ~" << std::numeric_limits<int>::max() / 100//dong
                             << " artificial cells of a given type can be created per NrnThread, "
                                "this model has "
                             << ml->nodecount << " instances of " << memb_func[type].sym->name
@@ -309,7 +309,7 @@ void CellGroup::datumindex_fill(int ith, CellGroup& cg, DatumIndices& di, Memb_l
                 }
                 assert(etype != 0);
                 // pointer into one of the tml types?
-            }else if (dmap[j] > 0 && dmap[j] < 1000) { // double* into eion type data
+            }else if (dmap[j] > 0 && dmap[j] < 100) { // double* into eion type data //dong
                 Memb_list* eml = cg.type2ml[dmap[j]];
                 assert(eml);
                 if(dparam[j].pval < eml->data[0]){
@@ -330,7 +330,7 @@ void CellGroup::datumindex_fill(int ith, CellGroup& cg, DatumIndices& di, Memb_l
                 assert(dparam[j].pval < (eml->data[0] +
                                          (nrn_prop_param_size_[etype] * eml->nodecount)));
                 eindex = dparam[j].pval - eml->data[0];
-            }else if (dmap[j] > 1000) {//int* into ion dparam[xxx][0]
+            }else if (dmap[j] > 100) {//int* into ion dparam[xxx][0] //dong
                 //store the actual ionstyle
                 etype = dmap[j];
                 eindex = *((int*)dparam[j]._pvoid);
@@ -432,7 +432,7 @@ void CellGroup::mk_cgs_netcon_info(CellGroup* cgs) {
                     int type = pnt->prop->type;
                     if (nrn_is_artificial_[type]) {
                         int ix = nrncore_art2index(pnt->prop->param);
-                        cgs[ith].netcon_srcgid[i] = -(type + 1000*ix);
+                        cgs[ith].netcon_srcgid[i] = -(type + 100*ix)//dong;
                     }else{
                         assert(nrn_has_net_event(type));
                         Memb_list* ml = cgs[ith].type2ml[type];
@@ -441,7 +441,7 @@ void CellGroup::mk_cgs_netcon_info(CellGroup* cgs) {
                         double* d2 = pnt->prop->param;
                         assert(d2 >= d1 && d2 < (d1 + (sz*ml->nodecount)));
                         int ix = (d2 - d1)/sz;
-                        cgs[ith].netcon_srcgid[i] = -(type + 1000*ix);
+                        cgs[ith].netcon_srcgid[i] = -(type + 100*ix);//dong
                     }
                 }else{
                     cgs[ith].netcon_srcgid[i] = -1;
