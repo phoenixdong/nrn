@@ -4,6 +4,9 @@
 #include <nrnpthread.h>
 #include <nrnmpi.h>
 
+//dong
+#include <string.h>
+
 
 /*
 Now that threads have taken over the actual_v, v_node, etc, it might
@@ -878,7 +881,13 @@ static void reorder_secorder() {
 	Node* nd;
 	hoc_Item* qsec;
 	hoc_List* sl;
-	int order, isec, i, j, inode;
+	//dong
+	//int order, isec, i, j, inode;
+	int order, isec, i, j, inode, par_id, has_logical, nnode, nsec, new_isec;
+	int* id_trans;
+	FILE *fp;
+	char fname[500];
+
 	/* count and allocate */
 	ForAllSections(sec)
 		sec->order = -1;
@@ -893,6 +902,9 @@ static void reorder_secorder() {
 			assert(sec->order == -1);
 			secorder[order] = sec;
 			sec->order = order;
+			//dong
+			sec->icell = order;
+
 			++order;
 			nd = sec->parentnode;
 			nd->_nt = _nt;
@@ -901,6 +913,9 @@ static void reorder_secorder() {
 		/* all children of what is already in secorder */
 		for (isec = order - _nt->ncell; isec < order; ++isec) {
 			sec = secorder[isec];
+			//dong
+			sec->icell = sec->parentnode->sec->icell;
+
 			/* to make it easy to fill in PreSyn.nt_*/
 			sec->prop->dparam[9]._pvoid = (void*)_nt;
 			for (j = 0; j < sec->nnode; ++j) {
@@ -977,6 +992,128 @@ static void reorder_secorder() {
 	/*assert(inode == v_node_count);*/
 	/* not missing any */
 	ForAllSections(sec) assert(sec->order != -1); }
+
+	//dong
+		id_trans = (int*)malloc(sizeof(int) * order);
+	sprintf(fname, "secnamelist%d.txt", nrnmpi_myid);
+	fp = fopen(fname, "w");
+	fprintf(fp, "%d\n", order);
+	for (isec = 0; isec < order; isec++) {
+		fprintf(fp, "%s\n", secname(secorder[isec]));
+	}
+	fclose(fp);
+
+	sprintf(fname, "sec2rec%d", nrnmpi_myid);
+	fp = fopen(fname, "w");
+	new_isec = 0;
+	for (isec = 0; isec < order; isec++){
+		id_trans[isec] = -1;
+		if (secorder[isec]->npt3d > 0)
+		{
+			fprintf(fp, "%s\n", secname(secorder[isec]));
+			id_trans[isec] = new_isec;
+			new_isec++;
+		}
+	}
+	fclose(fp);
+
+	sprintf(fname, "map_node2sec%d", nrnmpi_myid);
+	fp = fopen(fname, "w");
+	FOR_THREADS(_nt) {
+		if (_nt->ncell > 0) {
+			fprintf(fp, "%d\n", _nt->end);
+			for (inode = 0; inode < _nt->end; inode++) {
+				nd = _nt->_v_node[inode];
+				if (nd->v_node_index != inode)
+					printf("node_index:%d inode:%d\n", nd->v_node_index, inode);
+				fprintf(fp, "%d\n", _nt->_v_node[inode]->sec->order);
+			}
+		}
+	}
+	fclose(fp);
+
+	nsec = 0;
+	for (i = 0; i < order; i++) {
+		if (secorder[i]->npt3d > 0)
+			nsec++;
+	}
+	
+
+	sprintf(fname, "sections%d", nrnmpi_myid);
+	fp = fopen(fname, "wb");
+	if (!fp)
+		printf("open file error\n");
+	fwrite(&nsec, sizeof(int), 1, fp);
+	for (i = 0; i < order; i++) {
+		sec = secorder[i];
+		if (sec->npt3d == 0)
+			continue;
+		if (sec->prop) {
+			if (sec->prop->ob != NULL)
+				printf("not empty %d\n", i);
+		}
+		fwrite(&id_trans[i], sizeof(int), 1, fp);
+		fwrite(&sec->icell, sizeof(int), 1, fp);
+		if (sec->parentsec)
+			par_id = sec->parentsec->order;
+		else
+			par_id = -1;
+		fwrite(&id_trans[par_id], sizeof(int), 1, fp);
+		if (sec->logical_connection)
+			has_logical = 1;
+		else
+			has_logical = 0;
+		fwrite(&has_logical, sizeof(int), 1, fp);
+		if (has_logical) {
+			fwrite(&sec->logical_connection[0].x, sizeof(float), 1, fp);
+			fwrite(&sec->logical_connection[0].y, sizeof(float), 1, fp);
+			fwrite(&sec->logical_connection[0].z, sizeof(float), 1, fp);
+		}
+		fwrite(&sec->nnode, sizeof(short), 1, fp);
+		fwrite(&sec->npt3d, sizeof(short), 1, fp);
+		for (j = 0; j < sec->npt3d; j++) {
+			fwrite(&sec->pt3d[j].x, sizeof(float), 1, fp);
+			fwrite(&sec->pt3d[j].y, sizeof(float), 1, fp);
+			fwrite(&sec->pt3d[j].z, sizeof(float), 1, fp);
+			fwrite(&sec->pt3d[j].d, sizeof(float), 1, fp);
+		}
+	}
+	fclose(fp);
+
+
+	nnode = 0;
+	FOR_THREADS(_nt) {
+		for (i = 0; i < _nt->end; i++)
+			if (_nt->_v_node[i]->sec->npt3d > 0)
+				nnode++;
+	}
+	sprintf(fname, "nodes%d", nrnmpi_myid);
+	fp = fopen(fname, "wb");
+	if (!fp)
+		printf("open file error\n");
+	FOR_THREADS(_nt) {
+		fwrite(&nnode, sizeof(int), 1, fp);
+		for (i = 0; i < _nt->end; i++) {
+			if (_nt->_v_node[i]->sec->npt3d == 0)
+				continue;
+			//printf("secname:%s sec_node_index:%d nnode in sec:%d npt3d:%d\n", secname(_nt->_v_node[i]->sec), _nt->_v_node[i]->sec_node_index_, _nt->_v_node[i]->sec->nnode, _nt->_v_node[i]->sec->npt3d);
+			fwrite(&i, sizeof(int), 1, fp);
+			new_isec = id_trans[_nt->_v_node[i]->sec->order];
+			fwrite(&new_isec, sizeof(int), 1, fp);
+			fwrite(&_nt->_v_node[i]->sec_node_index_, sizeof(int), 1, fp);
+			if (_nt->_v_parent[i])
+			   par_id = _nt->_v_parent[i]->v_node_index;
+			else
+			   par_id = -1;
+			fwrite(&par_id, sizeof(int), 1, fp);
+
+		}
+	}
+	fclose(fp);
+	assert(order == section_count);
+	free(id_trans);
+	printf("process %d finished outputing nodes and sections\n", nrnmpi_myid);
+	//dong <
 
 	/* here is where multisplit reorders the nodes. Afterwards
 	  in either case, we can then point to v, d, rhs in proper
