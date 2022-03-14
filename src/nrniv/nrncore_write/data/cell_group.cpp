@@ -94,6 +94,7 @@ CellGroup* CellGroup::mk_cellgroups(CellGroup* cgs) {
                         // static_cast<long> ensures the RHS is calculated with
                         // `long` precision, not `int` precision. This lets us
                         // check for overflow below.
+                        //dong
                         agid = -(type +
                                  100 * static_cast<long>(nrncore_art2index(pnt->prop->param)));// dong
                     } else { // POINT_PROCESS with net_event
@@ -102,6 +103,7 @@ CellGroup* CellGroup::mk_cellgroups(CellGroup* cgs) {
                         double *d2 = pnt->prop->param;
                         assert(d2 >= d1 && d2 < (d1 + (sz * ml->nodecount)));
                         long ix{(d2 - d1) / sz};
+                        //dong
                         agid = -(type + 100 * ix);//dong
                     }
                     if (ps) {
@@ -121,6 +123,7 @@ CellGroup* CellGroup::mk_cellgroups(CellGroup* cgs) {
                     // Point_process.
                     if (agid < std::numeric_limits<int>::min() || agid >= -1) {
                         std::ostringstream oss;
+                        //dong
                         oss << "maximum of ~" << std::numeric_limits<int>::max() / 100//dong
                             << " artificial cells of a given type can be created per NrnThread, "
                                "this model has "
