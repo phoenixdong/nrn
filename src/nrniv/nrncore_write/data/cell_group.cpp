@@ -435,7 +435,7 @@ void CellGroup::mk_cgs_netcon_info(CellGroup* cgs) {
                     int type = pnt->prop->type;
                     if (nrn_is_artificial_[type]) {
                         int ix = nrncore_art2index(pnt->prop->param);
-                        cgs[ith].netcon_srcgid[i] = -(type + 100*ix)//dong;
+                        cgs[ith].netcon_srcgid[i] = -(type + 100*ix);//dong;
                     }else{
                         assert(nrn_has_net_event(type));
                         Memb_list* ml = cgs[ith].type2ml[type];
