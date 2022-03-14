@@ -60,6 +60,7 @@ typedef struct Section {
 	struct Pt3d *logical_connection; /* nil for legacy, otherwise specifies logical connection position (for translation) */
 #endif
 	struct Prop	*prop;	/* eg. length, etc. */
+	int icell;
 } Section;
 
 #if DIAMLIST
