@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CoreNEURON compatibility &mdash; NEURON  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.1/dist/embed-amd.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Getting CoreNEURON" href="installation.html" />
+    <link rel="prev" title="CoreNEURON" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> NEURON
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Building:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cmake_doc/index.html">CMake Build Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/developer.html">Developer Builds</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../videos/index.html">Training videos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/index.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications about NEURON</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">NEURON scripting:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../python/index.html">NEURON Python documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hoc/index.html">NEURON HOC documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Python tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rxd-tutorials/index.html">Python RXD tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">CoreNEURON</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">CoreNEURON compatibility</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#threadsafe">THREADSAFE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bbcorepointer">BBCOREPOINTER</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html">Getting CoreNEURON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="running-a-simulation.html">Running a simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer documentation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../scm/index.html">NEURON SCM and Release</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev/index.html">NEURON Development topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../doxygen.html">C/C++ API</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Removed Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../removed_features.html">Removed Features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">NEURON 8.0</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html#contributors">Contributors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html#feedback-help">Feedback / Help</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">NEURON</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">CoreNEURON</a> &raquo;</li>
+      <li>CoreNEURON compatibility</li>
+<li class="wy-breadcrumbs-aside">
+    
+    
+</li>
+
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/coreneuron/compatibility.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="coreneuron-compatibility">
+<h1>CoreNEURON compatibility<a class="headerlink" href="#coreneuron-compatibility" title="Permalink to this headline"></a></h1>
+<p>CoreNEURON is designed as a library within the NEURON simulator and can transparently handle all spiking network simulations, including gap junction coupling, with the <strong>fixed time step method</strong>.
+In order to run a NEURON model with CoreNEURON certain conditions must be met:</p>
+<ul class="simple">
+<li>MOD files must be <code class="docutils literal notranslate"><span class="pre">THREADSAFE</span></code>, for more information see <a class="reference internal" href="#threadsafe"><span class="std std-ref">THREADSAFE</span></a></li>
+<li>Random123 must be used if a random number generator is needed; MCellRan4 is not supported</li>
+<li><code class="docutils literal notranslate"><span class="pre">POINTER</span></code> variables must be converted to <code class="docutils literal notranslate"><span class="pre">BBCOREPOINTER</span></code>, for more information see <a class="reference internal" href="#bbcorepointer"><span class="std std-ref">BBCOREPOINTER</span></a></li>
+<li><code class="docutils literal notranslate"><span class="pre">TABLE</span></code> statements should be commented out in MOD files if they are
+to be executed with CoreNEURON on GPU.
+See <a class="reference external" href="https://github.com/neuronsimulator/nrn/issues/1505">nrn#1505</a>
+for more information.</li>
+</ul>
+<p>Note that models using the following features cannot presently be simulated with CoreNEURON.</p>
+<table border="1" class="colwidths-given fixed-table docutils align-default" id="id2">
+<caption><span class="caption-text">Non-supported NEURON features</span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
+<colgroup>
+<col width="45%" />
+<col width="10%" />
+<col width="10%" />
+<col width="35%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Feature</th>
+<th class="head">NEURON</th>
+<th class="head">CoreNEURON</th>
+<th class="head">Remarks *</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Variable time step methods (i.e CVODE and IDA)</td>
+<td>✔</td>
+<td>✖</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>Extracellular Mechanism</td>
+<td>✔</td>
+<td>✖ *</td>
+<td>If <cite>i_membrane</cite> is of sole interest, then you can switch from extracellular to <cite>cvode.use_fast_imem(1)</cite> and make use of <cite>i_membrane_</cite></td>
+</tr>
+<tr class="row-even"><td>Linear Mechanism</td>
+<td>✔</td>
+<td>✖</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-odd"><td>RxD Module</td>
+<td>✔</td>
+<td>✖</td>
+<td>&#160;</td>
+</tr>
+<tr class="row-even"><td>Per-timestep interpreter calculations during simulation</td>
+<td>✔</td>
+<td>✖ *</td>
+<td>Generally, <cite>Vector.record</cite> and <cite>Vector.play</cite> are ok, as are the display of GUI variable trajectories.
+Anything requiring callbacks into the interpreter (Python or HOC) are not implemented.</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="threadsafe">
+<h2>THREADSAFE<a class="headerlink" href="#threadsafe" title="Permalink to this headline"></a></h2>
+<p>CoreNEURON’s acceleration is made possible through it’s ability not only to run the simulations in parallel but also by being able to take advantage of the vectorization support of CPUs and execution on GPUs. To be able to execute a model in parallel using multiple threads the mod file developer should make sure that the mod file is thread safe. You can find more information about <code class="docutils literal notranslate"><span class="pre">THREADSAFE</span></code> mod files <a class="reference external" href="https://neuron.yale.edu/neuron/docs/multithread-parallelization">here</a>.</p>
+<p>By making the mod file thread safe the initialization and current and state update for all the sections that include this mechanism can be done in parallel using vectorized CPU instructions and can be executed in GPU safely.</p>
+<p>Some useful instructions to make a mod file thread safe are:</p>
+<ul class="simple">
+<li>Make sure that all the variables that are written in the mod file and are defined as <code class="docutils literal notranslate"><span class="pre">GLOBAL</span></code> are now defined as <code class="docutils literal notranslate"><span class="pre">RANGE</span></code>. More information about <code class="docutils literal notranslate"><span class="pre">GLOBAL</span></code> and <code class="docutils literal notranslate"><span class="pre">RANGE</span></code> variables can be found <a class="reference external" href="https://nrn.readthedocs.io/en/latest/hoc/modelspec/programmatic/mechanisms/nmodl2.html">here</a>.</li>
+<li>In case there are any <code class="docutils literal notranslate"><span class="pre">VERBATIM</span></code> blocks those need to be threadsafe and there must be a <code class="docutils literal notranslate"><span class="pre">THREADSAFE</span></code> keyword in the <code class="docutils literal notranslate"><span class="pre">NEURON</span></code> block to declare that the <code class="docutils literal notranslate"><span class="pre">VERBATIM</span></code> blocks are thread safe. Also make sure that the <code class="docutils literal notranslate"><span class="pre">NEURON</span></code> block is defined before any <code class="docutils literal notranslate"><span class="pre">VERBATIM</span></code> block in the mod file</li>
+</ul>
+</div>
+<div class="section" id="bbcorepointer">
+<h2>BBCOREPOINTER<a class="headerlink" href="#bbcorepointer" title="Permalink to this headline"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">BBCOREPOINTER</span></code> is used to transfer dynamically allocated data between NEURON and CoreNEURON.</p>
+<p>User-allocated data can be managed in NMODL using the <code class="docutils literal notranslate"><span class="pre">POINTER</span></code> type.
+It allows the programmer to reference data that has been allocated in HOC or in <code class="docutils literal notranslate"><span class="pre">VERBATIM</span></code> blocks.
+This allows for more advanced data-structures that are not natively supported in NMODL.</p>
+<p>Since NEURON itself has no knowledge of the layout and size of this data it cannot
+transfer <code class="docutils literal notranslate"><span class="pre">POINTER</span></code> data automatically to CoreNEURON.
+Furtheremore, in many cases there is no need to transfer the data between the two instances.
+In some cases, however, the programmer would like to transfer certain user-defined data into CoreNEURON.
+The most prominent example are Random123 random number stream parameters used in synapse mechanisms.
+To support this use-case the <code class="docutils literal notranslate"><span class="pre">BBCOREPOINTER</span></code> type was introduced.
+Variables that are declared as <code class="docutils literal notranslate"><span class="pre">BBCOREPOINTER</span></code> behave exactly the same as <code class="docutils literal notranslate"><span class="pre">POINTER</span></code> but are
+additionally taken into account when NEURON is serializing mechanism data (for file writing or
+direct-memory transfer).
+For NEURON to be able to write (and indeed CoreNEURON to be able to read) <code class="docutils literal notranslate"><span class="pre">BBCOREPOINTER</span></code>
+data, the programmer has to additionally provide two C functions that are called as part
+of the serialization/deserialization.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">bbcore_write</span><span class="p">(</span><span class="kt">double</span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">d_offset</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">x_offset</span><span class="p">,</span><span class="w"> </span><span class="n">_threadargsproto_</span><span class="p">);</span><span class="w"></span>
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">bbcore_read</span><span class="p">(</span><span class="kt">double</span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">d_offset</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">*</span><span class="w"> </span><span class="n">x_offset</span><span class="p">,</span><span class="w"> </span><span class="n">_threadargsproto_</span><span class="p">);</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The implementation of <code class="docutils literal notranslate"><span class="pre">bbcore_write</span></code> and <code class="docutils literal notranslate"><span class="pre">bbcore_read</span></code> determines the serialization and
+deserialization of the per-instance mechanism data referenced through the various
+<code class="docutils literal notranslate"><span class="pre">BBCOREPOINTER</span></code>.</p>
+<p>NEURON will call <code class="docutils literal notranslate"><span class="pre">bbcore_write</span></code> twice per mechanism instance.
+In a first sweep, the call is used to determine the required memory to be allocated on the serialization arrays.
+In the second sweep the call is used to fill in the data per mechanism instance.</p>
+<table border="1" class="colwidths-given fixed-table docutils align-default" id="id3">
+<caption><span class="caption-text">Arguments to <code class="docutils literal notranslate"><span class="pre">bbcore_read</span></code> and <code class="docutils literal notranslate"><span class="pre">bbcore_write</span></code>.</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
+<colgroup>
+<col width="15%" />
+<col width="85%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Argument</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">x</span></code></td>
+<td>A <code class="docutils literal notranslate"><span class="pre">double</span></code> type array that will be allocated by NEURON to fill
+with real-valued data. In the first call, <code class="docutils literal notranslate"><span class="pre">x</span></code> is <code class="docutils literal notranslate"><span class="pre">nullptr</span></code>
+as it has not been allocated yet.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">d</span></code></td>
+<td>An <code class="docutils literal notranslate"><span class="pre">int</span></code> type array that will be allocated by NEURON to fill
+with integer-valued data. In the first call, <code class="docutils literal notranslate"><span class="pre">d</span></code> is
+<code class="docutils literal notranslate"><span class="pre">nullptr</span></code> as it has not been allocated yet.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">x_offset</span></code></td>
+<td>The offset in <code class="docutils literal notranslate"><span class="pre">x</span></code> at which the mechanism instance should write
+its real-valued <code class="docutils literal notranslate"><span class="pre">BBCOREPOINTER</span></code> data. In the first call this is
+an output argument that is expected to be updated by the
+per-instance size to be allocated.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">d_offset</span></code></td>
+<td>The offset in <code class="docutils literal notranslate"><span class="pre">d</span></code> at which the mechanism instance should write
+its integer-valued <code class="docutils literal notranslate"><span class="pre">BBCOREPOINTER</span></code> data. In the first call
+this is an output argument that is expected to be updated by the
+per-instance size to be allocated.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">_threadargsproto_</span></code></td>
+<td><p class="first">A macro placeholder for NEURON/CoreNEURON data-structure
+parameters. They are typically only used through generated
+defines and not by the programmer. The macro is defined as
+follows:</p>
+<div class="last highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#define _threadargsproto_ int _iml, int _cntml_padded, double *_p, Datum *_ppvar, \</span>
+<span class="cp">                          ThreadDatum *_thread, NrnThread *_nt, double _v</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Putting all of this together, the following is a minimal MOD using <code class="docutils literal notranslate"><span class="pre">BBCOREPOINTER</span></code>:</p>
+<div class="highlight-hoc notranslate"><div class="highlight"><pre><span></span>TITLE A BBCOREPOINTER Example
+
+NEURON {
+  BBCOREPOINTER my_data
+}
+
+ASSIGNED {
+  my_data
+}
+
+: Do something interesting with my_data ...
+VERBATIM
+static void bbcore_write(double* x, int* d, int* x_offset, int* d_offset, _threadargsproto_) {
+  if (x) {
+    double* x_i = x + *x_offset;
+    x_i[0] = _p_my_data[0];
+    x_i[1] = _p_my_data[1];
+  }
+  *x_offset += 2; // reserve 2 doubles on serialization buffer x
+}
+
+static void bbcore_read(double* x, int* d, int* x_offset, int* d_offset, _threadargsproto_) {
+  assert(!_p_my_data);
+  double* x_i = x + *x_offset;
+  // my_data needs to be allocated somehow
+  _p_my_data = (double*)malloc(sizeof(double)*2);
+  _p_my_data[0] = x_i[0];
+  _p_my_data[1] = x_i[1];
+  *x_offset += 2;
+}
+ENDVERBATIM
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="CoreNEURON" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="installation.html" class="btn btn-neutral float-right" title="Getting CoreNEURON" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Duke, Yale and the Blue Brain Project.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
