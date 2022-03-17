@@ -23,8 +23,8 @@ extern void (*nrnthread_v_transfer_)(NrnThread*);
 
 int chkpnt;
 //dong
-//const char *bbcore_write_version = "1.5"; // Generalize POINTER to allow pointing to any RANGE variable
-const char *bbcore_write_version = "1.5.mod100";
+const char *bbcore_write_version = "1.5"; // Generalize POINTER to allow pointing to any RANGE variable
+//const char *bbcore_write_version = "1.5.mod100";
 
 /// create directory with given path
 void create_dir_path(const std::string& path) {
